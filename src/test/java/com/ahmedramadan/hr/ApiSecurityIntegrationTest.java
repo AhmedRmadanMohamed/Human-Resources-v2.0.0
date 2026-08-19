@@ -76,6 +76,15 @@ class ApiSecurityIntegrationTest extends IntegrationTestSupport {
     }
 
     @Test
+    void openApiDocumentIsPublicAndGenerated() throws Exception {
+        mockMvc.perform(get("/v3/api-docs"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.info.title").value("Human Resources API"))
+                .andExpect(jsonPath("$.info.version").value("3.0.0"))
+                .andExpect(jsonPath("$.paths['/api/v1/auth/login']").exists());
+    }
+
+    @Test
     void validCredentialsReturnShortLivedJwt() throws Exception {
         mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
